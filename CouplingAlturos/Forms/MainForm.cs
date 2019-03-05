@@ -1,38 +1,35 @@
 ﻿using Accord.Video.FFMPEG;
 using Alturos.Yolo;
 using Alturos.Yolo.Model;
-using CouplingAlturos.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CouplingAlturos
 {
     
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private YoloWrapper _yoloWrapper;
-        private Image _curPic;
-        public Form1()
+        private Image _curPic; // Не уверен в необходимости этой переменной
+        public MainForm()
         {
-
+			// Хозяйничать можно?
             InitializeComponent();
-            Task.Run(() => Initialize("."));
-        }
+            Task.Run(() => Initialize("Resources/")); //Зачем поток и в конструкторе
+		}
 
         private void Initialize(string path)
         {
             var configurationDetector = new ConfigurationDetector();
-            var config = configurationDetector.Detect(path);
+            var config = configurationDetector.Detect(path); // ф-ия возвращает только тех, что заканчиваются на ".weights" такого файла не было
 
             if (config == null)
             {
@@ -53,6 +50,7 @@ namespace CouplingAlturos
                 _yoloWrapper = new YoloWrapper(config.ConfigFile, config.WeightsFile, config.NamesFile, 0, true);
                 sw.Stop();
 
+	            // Всё что ниже перепишу
                 var action = new MethodInvoker(delegate
                 {
                     var detectionSystemDetail = string.Empty;
@@ -106,8 +104,7 @@ namespace CouplingAlturos
 
             var sw = new Stopwatch();
             sw.Start();
-            List<YoloItem> items;
-            items = _yoloWrapper.Detect(imageData).ToList(); 
+            var items = _yoloWrapper.Detect(imageData).ToList(); 
             sw.Stop();
             groupBoxResult.Text = $@"Result [ processed in {sw.Elapsed.TotalMilliseconds:0} ms ]";
 
@@ -123,7 +120,7 @@ namespace CouplingAlturos
         private void DrawBorder2Image(IEnumerable<YoloItem> items, YoloItem selectedItem = null)
         {
             var image = _curPic;
-           // string path = "E:\\Khakaton_Mallenom\\team6\\1_101.jpg";
+            // string path = @"E:\\Khakaton_Mallenom\\team6\\1_101.jpg";
           //  var image = Image.FromFile(path);
             using (var canvas = Graphics.FromImage(image))
             {
@@ -149,7 +146,7 @@ namespace CouplingAlturos
                 }
             }
 
-            var oldImage = pic.Image;
+            var oldImage = pic.Image; // unused variable
             pic.Image = image;
             //oldImage?.Dispose();
         }
@@ -178,22 +175,19 @@ namespace CouplingAlturos
         private void btnOpenVideo_Click(object sender, EventArgs e)
         {
             var reader = new VideoFileReader();
-            reader.Open("test.avi");
+            reader.Open("test.avi"); 
  
             for (var i = 0; i < 10; i++)
             {
-                Image videoframe = reader.ReadVideoFrame();
-                _curPic = videoframe;
-                pic.Image = videoframe;
+                var frame = reader.ReadVideoFrame();
+                _curPic = frame;
+                pic.Image = frame;
 
-                Detect(videoframe);
-                //videoframe.Dispose();
-            }
-               
+                Detect(frame);
+				//frame.Dispose();
+			}
 
-               
-               
-            reader.Close();
+			reader.Close();
         }
 
         private void pic_LoadCompleted(object sender, AsyncCompletedEventArgs e)

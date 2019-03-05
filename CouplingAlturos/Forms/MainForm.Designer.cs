@@ -1,6 +1,6 @@
 ﻿namespace CouplingAlturos
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -182,7 +182,7 @@
             this.btnOpenVideo.UseVisualStyleBackColor = true;
             this.btnOpenVideo.Click += new System.EventHandler(this.btnOpenVideo_Click);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -195,9 +195,9 @@
             this.Controls.Add(this.pic);
             this.Controls.Add(this.dataGridViewResult);
             this.MinimizeBox = false;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "MainForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResult)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.yoloItemBindingSource)).EndInit();
