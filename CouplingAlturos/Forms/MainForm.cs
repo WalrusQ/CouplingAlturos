@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CouplingAlturos.Abstractions;
 using CouplingAlturos.Core;
+using CouplingAlturos.Core.Models;
 
 namespace CouplingAlturos
 {
@@ -184,20 +185,32 @@ namespace CouplingAlturos
 
         private void btnOpenVideo_Click(object sender, EventArgs e)
         {
-            var reader = new VideoFileReader();
-            reader.Open("test.avi"); 
+
+			var progress = new Progress<RecognitionResult>(result =>
+			{
+				Debug.WriteLine("Eeee");
+			});
+
+
+			Task.Factory.StartNew(() =>
+			{
+				VideoDetector.Process("Resources/test.avi", progress); 
+			});
+	
+   //         var reader = new VideoFileReader();
+   //         reader.Open("test.avi"); 
  
-            for (var i = 0; i < 10; i++)
-            {
-                var frame = reader.ReadVideoFrame();
-                _curPic = frame;
-                pic.Image = frame;
+   //         for (var i = 0; i < 10; i++)
+   //         {
+   //             var frame = reader.ReadVideoFrame();
+   //             _curPic = frame;
+   //             pic.Image = frame;
 
-                Detect(frame);
-				//frame.Dispose();
-			}
+   //             Detect(frame);
+			//	//frame.Dispose();
+			//}
 
-			reader.Close();
+			//reader.Close();
         }
 
         private void pic_LoadCompleted(object sender, AsyncCompletedEventArgs e)

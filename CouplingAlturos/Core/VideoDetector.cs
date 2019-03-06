@@ -16,11 +16,11 @@ namespace CouplingAlturos.Core
 			ImageDetector = imageDetector;
 		}
 
-		public Task Process(string filename, IProgress<RecognitionResult> progress)
+		public void Process(string filename, IProgress<RecognitionResult> progress)
 		{
 			using (var reader = new VideoFileReader())
 			{
-				reader.Open("test.avi");
+				reader.Open(filename);
 
 				while (reader.IsOpen)
 				{
@@ -31,8 +31,6 @@ namespace CouplingAlturos.Core
 
 				reader.Close();
 			}
-
-			return Task.CompletedTask;
 		}
 	}
 }
