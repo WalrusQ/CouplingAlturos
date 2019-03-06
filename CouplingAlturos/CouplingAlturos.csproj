@@ -47,6 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RegistrationService.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Core\Converters\ImageConverter.cs" />
+    <Compile Include="Abstractions\IImageDetector.cs" />
+    <Compile Include="Abstractions\IVideoDetector.cs" />
+    <Compile Include="Abstractions\IViewResolver.cs" />
+    <Compile Include="Core\Models\YoloMetaInfo.cs" />
+    <Compile Include="Core\Models\RecognitionResult.cs" />
+    <Compile Include="Core\VideoDetector.cs" />
+    <Compile Include="Core\ViewResolver.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -56,6 +66,7 @@
     <Compile Include="ImageInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Core\ImageDetector.cs" />
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -84,6 +95,9 @@
     <None Include="Resources\yolov3-second.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\yolov3-second_5720.weights">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -101,6 +115,14 @@
     <PackageReference Include="Alturos.Yolo">
       <Version>2.4.1</Version>
     </PackageReference>
+    <PackageReference Include="Autofac">
+      <Version>4.9.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\test.avi">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -11,6 +11,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CouplingAlturos.Abstractions;
+using CouplingAlturos.Core;
 
 namespace CouplingAlturos
 {
@@ -19,9 +21,17 @@ namespace CouplingAlturos
     {
         private YoloWrapper _yoloWrapper;
         private Image _curPic; // Не уверен в необходимости этой переменной
-        public MainForm()
+
+		public IImageDetector ImageDetector { get; }
+
+		public IVideoDetector VideoDetector { get; }
+
+		public MainForm(IImageDetector imageDetector, IVideoDetector videoDetector)
         {
-			// Хозяйничать можно?
+	        ImageDetector = imageDetector;
+	        VideoDetector = videoDetector;
+
+	        // Хозяйничать можно?
             InitializeComponent();
             Task.Run(() => Initialize("Resources/")); //Зачем поток и в конструкторе
 		}
