@@ -17,8 +17,16 @@ namespace CouplingAlturos
 
 			builder
 				.RegisterType<VideoDetector>()
-				.As<IVideoDetector>()
+				.As<IVideoDetector>();
+
+			builder
+				.RegisterType<VideoThreadManager>()
+				.As<IVideoThreadManager>()
 				.SingleInstance();
+
+			builder
+				.RegisterType<ViewResolver>()
+				.As<IViewResolver>();
 
 			builder
 				.RegisterType<MainForm>()

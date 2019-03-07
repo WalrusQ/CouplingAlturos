@@ -47,6 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\IVideoThreadManager.cs" />
+    <Compile Include="Core\Exception\ThreadAlreadyStartedException.cs" />
+    <Compile Include="Core\VideoThreadManager.cs" />
     <Compile Include="RegistrationService.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Core\Converters\ImageConverter.cs" />

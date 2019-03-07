@@ -19,7 +19,7 @@ namespace CouplingAlturos.Core
 			var stopwatch = new Stopwatch();
 
 			stopwatch.Start();
-			_yolo = new YoloWrapper(GetConfiguration(), true);
+			_yolo = new YoloWrapper(GetConfiguration(), Constants.GpuEnabled);
 			stopwatch.Stop();
 
 			YoloMetaInfo = new YoloMetaInfo()
