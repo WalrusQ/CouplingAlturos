@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using CouplingAlturos.Abstractions;
 using CouplingAlturos.Core;
 using CouplingAlturos.Core.Models;
+using CouplingAlturos.Model;
 
 namespace CouplingAlturos
 {
@@ -21,7 +22,6 @@ namespace CouplingAlturos
     public partial class MainForm : Form
     {
         private YoloWrapper _yoloWrapper;
-        private Image _curPic; // Не уверен в необходимости этой переменной
 
 		public IImageDetector ImageDetector { get; }
 
@@ -31,29 +31,15 @@ namespace CouplingAlturos
         {
 	        ImageDetector = imageDetector;
 	        VideoDetector = videoDetector;
-
-	        // Хозяйничать можно?
+            
             InitializeComponent();
-            Task.Run(() => Initialize("Resources/")); //Зачем поток и в конструкторе
 		}
-
-        private void Initialize(string path)
-        {
-            var configurationDetector = new ConfigurationDetector();
-            var config = configurationDetector.Detect(path); // ф-ия возвращает только тех, что заканчиваются на ".weights" такого файла не было
-
-            if (config == null)
-            {
-                return;
-            }
-
-            Initialize(config);
-        }
 
         private void Initialize(YoloConfiguration config)
         {
             try
             {
+                
 	            _yoloWrapper?.Dispose();
 
                 var sw = new Stopwatch();
@@ -74,7 +60,7 @@ namespace CouplingAlturos
                 });
 
                 statusStrip1.Invoke(action);
-                btnDetect.Invoke(new MethodInvoker(delegate { btnDetect.Enabled = true; }));
+               
                 btnOpenVideo.Invoke(new MethodInvoker(delegate { btnOpenVideo.Enabled = true; }));
             }
             catch (Exception exception)
@@ -89,77 +75,39 @@ namespace CouplingAlturos
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    _curPic = Image.FromFile(ofd.FileName);
                     pic.Image = Image.FromFile(ofd.FileName);
+                    RecognitionOutput(ImageDetector.Process(pic.Image));
+
                 }
             }
         }
 
-        private byte[] ImageToByteArray(Image imageIn)
+        private void RecognitionOutput(RecognitionResult result)
         {
-            using (var ms = new MemoryStream())
-            {
-                imageIn.Save(ms, ImageFormat.Bmp);
-                return ms.ToArray();
-            }
+            dataGridViewResult.DataSource = result.Items;
+            DrawBorder2Image(result);
+            logToXml(result);
         }
 
-        private void Detect(Image img)
+
+
+        private void DrawBorder2Image(RecognitionResult result)
         {
-            if (_yoloWrapper == null)
-            {
-                return;
-            }
-            
-            var imageData = ImageToByteArray(img);
 
-            var sw = new Stopwatch();
-            sw.Start();
-            var items = _yoloWrapper.Detect(imageData).ToList(); 
-            sw.Stop();
-            groupBoxResult.Text = $@"Result [ processed in {sw.Elapsed.TotalMilliseconds:0} ms ]";
-
-            dataGridViewResult.DataSource = items;
-            DrawBorder2Image(items);
-        }
-
-        private void btnDetect_Click(object sender, EventArgs e)
-        {
-            Detect(pic.Image);
-        }
-
-        private void DrawBorder2Image(IEnumerable<YoloItem> items, YoloItem selectedItem = null)
-        {
-            var image = _curPic;
-            // string path = @"E:\\Khakaton_Mallenom\\team6\\1_101.jpg";
-          //  var image = Image.FromFile(path);
+            var image = result.Image;
             using (var canvas = Graphics.FromImage(image))
             {
-                // Modify the image using g here... 
-                // Create a brush with an alpha value and use the g.FillRectangle function
-                foreach (var item in items)
+                foreach (var item in result.Items)
                 {
-                    var x = item.X;
-                    var y = item.Y;
-                    var width = item.Width;
-                    var height = item.Height;
-
                     using (var overlayBrush = new SolidBrush(Color.FromArgb(150, 255, 255, 102)))
                     using (var pen = GetBrush(item.Confidence, image.Width))
                     {
-                        if (item.Equals(selectedItem))
-                        {
-                            canvas.FillRectangle(overlayBrush, x, y, width, height);
-                        }
-                        canvas.DrawRectangle(pen, x, y, width, height);
+                        canvas.DrawRectangle(pen, item.X, item.Y, item.Width, item.Height);
                         canvas.Flush();
                     }
                 }
             }
-
-            var oldImage = pic.Image; // unused variable
             pic.Image = image;
-            //oldImage?.Dispose();
         }
 
         private Pen GetBrush(double confidence, int width)
@@ -188,6 +136,7 @@ namespace CouplingAlturos
 
 			var progress = new Progress<RecognitionResult>(result =>
 			{
+                
 				Debug.WriteLine("Eeee");
 			});
 
@@ -211,6 +160,46 @@ namespace CouplingAlturos
 			//}
 
 			//reader.Close();
+        }
+
+        private void logToXml(RecognitionResult result)
+        {
+         
+            foreach(var item in result.Items)
+            {
+                var xc = item.X;
+                var yc = item.Y;
+                var w = item.Width;
+                var h = item.Height;
+                //todo: use ImageInfo to output image name (or smth)
+                string xml = @"<Object>" + Environment.NewLine +
+                    "  <Team Value=\"team6\" />" + Environment.NewLine +
+                    "  <ImageName Value=" + "1.jpg" + " />" + Environment.NewLine +
+                    "  <Region>" + Environment.NewLine +
+                    "    <Main>" + Environment.NewLine +
+                    "      <TopLeft X=" + (xc - w / 2) + " Y=" + (yc + h / 2) + " />" + Environment.NewLine +
+                    "      <BotRight X=" + (xc + w / 2) + " Y=" + (yc - h / 2) + " />" + Environment.NewLine +
+                    "    </Main>" + Environment.NewLine +
+                    "    <Alternative>" + Environment.NewLine +
+                    "      <Center X=" + xc + " Y=" + yc + "/>" + Environment.NewLine +
+                    "      <Width Value=" + w + "/>" + Environment.NewLine +
+                    "      <Height Value=" + h + "/>" + Environment.NewLine +
+                    "    </Alternative>" + Environment.NewLine +
+                    "    <EachPoint>" + Environment.NewLine +
+                    "      <Point X=" + (xc - w / 2) + " Y=" + (yc + h / 2) + " />" + Environment.NewLine +
+                    "      <!-- top-left -->" + Environment.NewLine +
+                    "      <Point X=" + (xc + w / 2) + " Y=" + (yc + h / 2) + " />" + Environment.NewLine +
+                    "      <!-- top-right -->" + Environment.NewLine +
+                    "      <Point X=" + (xc + w / 2) + " Y=" + (yc - h / 2) + " />" + Environment.NewLine +
+                    "      <!-- bottom-right -->" + Environment.NewLine +
+                    "      <Point X=" + (xc - w / 2) + " Y=" + (yc - h / 2) + " />" + Environment.NewLine +
+                    "      <!-- bottom-left -->" + Environment.NewLine +
+                    "    </EachPoint>" + Environment.NewLine +
+                    "  </Region>" + Environment.NewLine +
+                    "</Object>" + Environment.NewLine;
+                File.WriteAllText(@"D:\Desktop\CouplingAlturos-master\Result\" + "1.jpg" + ".xml", xml);
+            }
+           
         }
 
         private void pic_LoadCompleted(object sender, AsyncCompletedEventArgs e)
