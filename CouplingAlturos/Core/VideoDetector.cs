@@ -37,8 +37,8 @@ namespace CouplingAlturos.Core
 					var report = new VideoRecognitionResult()
 					{
 						ElapsedTime = result.ElapsedTime,
-						FrameRate = reader.BitRate,
-						Image = result.Image,
+						FrameRate = reader.FrameRate.Numerator,
+						ImageBytes = result.ImageBytes,
 						IndexFrame = ++indexFrame,
 						Items = result.Items
 					};

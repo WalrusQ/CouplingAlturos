@@ -41,14 +41,15 @@ namespace CouplingAlturos.Core
 		{
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
-			var items = _yolo.Detect(image.ToByteArray());
+			var bytes = image.ToByteArray();
+			var items = _yolo.Detect(bytes);
 			stopwatch.Stop();
 
 			return new ImageRecognitionResult
 			{
 				ElapsedTime = stopwatch.Elapsed,
 				Items = items,
-				Image = image
+				ImageBytes = bytes
 			};
 		}
 	}

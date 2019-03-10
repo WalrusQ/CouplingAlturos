@@ -14,5 +14,13 @@ namespace CouplingAlturos.Core.Converters
 				return ms.ToArray();
 			}
 		}
+
+		public static Image ToImage(this byte[] bytes)
+		{
+			using (var ms = new MemoryStream(bytes))
+			{
+				return Image.FromStream(ms);
+			}
+		}
 	}
 }

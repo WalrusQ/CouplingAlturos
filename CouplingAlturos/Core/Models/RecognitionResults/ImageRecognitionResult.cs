@@ -12,6 +12,6 @@ namespace CouplingAlturos.Core.Models
 
 		public IEnumerable<YoloItem> Items { get; set; }
 
-		public Image Image { get; set; }
+		public byte[] ImageBytes { get; set; }
 	}
 }

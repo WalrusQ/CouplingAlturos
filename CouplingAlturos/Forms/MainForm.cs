@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CouplingAlturos.Abstractions;
 using CouplingAlturos.Core;
+using CouplingAlturos.Core.Converters;
 using CouplingAlturos.Core.Models;
 using CouplingAlturos.Model;
 
@@ -35,7 +36,7 @@ namespace CouplingAlturos
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog ofd = new OpenFileDialog() { Filter = @"Image files(*.png; *.jpg; *.jpeg| *.png; *.jpg; *.jpeg"  })
+            using (OpenFileDialog ofd = new OpenFileDialog() { Filter = @"ImageBytes files(*.png; *.jpg; *.jpeg| *.png; *.jpg; *.jpeg"  })
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
@@ -57,7 +58,7 @@ namespace CouplingAlturos
         private Image DrawBorder2Image(IRecognitionResult result)
         {
 
-            var image = result.Image;
+            var image = result.ImageBytes.ToImage();
             using (var canvas = Graphics.FromImage(image))
             {
                 foreach (var item in result.Items)
@@ -101,7 +102,7 @@ namespace CouplingAlturos
             var couplingCounter = 0;
 			var progress = new Progress<VideoRecognitionResult>(result =>
 			{
-                pic.Image = result.Image;
+                pic.Image = result.ImageBytes.ToImage();
 				list.Add(new Item(result));
 				if(list.Count > 15)
 				{
@@ -121,7 +122,7 @@ namespace CouplingAlturos
 				}
                 else
                 {
-                    pic.Image = result.Image;
+                    pic.Image = result.ImageBytes.ToImage();
                 }
 				
 			});
@@ -136,7 +137,7 @@ namespace CouplingAlturos
    //         {
    //             var frame = reader.ReadVideoFrame();
    //             _curPic = frame;
-   //             pic.Image = frame;
+   //             pic.ImageBytes = frame;
 
    //             Detect(frame);
 			//	//frame.Dispose();
