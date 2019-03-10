@@ -19,12 +19,13 @@ namespace CouplingAlturos.Core
 			ImageDetector = imageDetector;
 		}
 
-		public void Process(string filename, IProgress<RecognitionResult> progress)
+		public void Process(string filename, IProgress<VideoRecognitionResult> progress)
 		{
 			IsStarted = true;
 			using (var reader = new VideoFileReader())
 			{
 				reader.Open(filename);
+				var indexFrame = 0;
 
 				while (reader.IsOpen)
 				{
@@ -32,8 +33,17 @@ namespace CouplingAlturos.Core
 
 					var frame = reader.ReadVideoFrame();
 					var result = ImageDetector.Process(frame);
-	
-					progress.Report(result); //todo: Вместо progress сделать event
+
+					var report = new VideoRecognitionResult()
+					{
+						ElapsedTime = result.ElapsedTime,
+						FrameRate = reader.BitRate,
+						Image = result.Image,
+						IndexFrame = ++indexFrame,
+						Items = result.Items
+					};
+
+					progress.Report(report); //todo: Вместо progress сделать event
 
 					frame.Dispose();
 				}

@@ -16,7 +16,7 @@ namespace CouplingAlturos.Core
 			VideoDetector = videoDetector;
 		}
 
-		public void Start(string filename, IProgress<RecognitionResult> progress)
+		public void Start(string filename, IProgress<VideoRecognitionResult> progress)
 		{
 			if(_thread?.ThreadState == ThreadState.Background 
 			   && _thread?.ThreadState == ThreadState.Running) throw new ThreadStateException();

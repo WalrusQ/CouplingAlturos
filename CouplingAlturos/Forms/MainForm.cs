@@ -25,12 +25,12 @@ namespace CouplingAlturos
 
 		public IImageDetector ImageDetector { get; }
 
-		public IVideoDetector VideoDetector { get; }
+		public IVideoThreadManager VideoThreadManager { get; }
 
-		public MainForm(IImageDetector imageDetector, IVideoDetector videoDetector)
+		public MainForm(IImageDetector imageDetector, IVideoThreadManager videoThreadManager)
         {
 	        ImageDetector = imageDetector;
-	        VideoDetector = videoDetector;
+	        VideoThreadManager = videoThreadManager;
             
             InitializeComponent();
 		}
@@ -82,7 +82,7 @@ namespace CouplingAlturos
             }
         }
 
-        private void RecognitionOutput(RecognitionResult result)
+        private void RecognitionOutput(IRecognitionResult result)
         {
             dataGridViewResult.DataSource = result.Items;
             DrawBorder2Image(result);
@@ -91,7 +91,7 @@ namespace CouplingAlturos
 
 
 
-        private void DrawBorder2Image(RecognitionResult result)
+        private void DrawBorder2Image(IRecognitionResult result)
         {
 
             var image = result.Image;
@@ -133,18 +133,28 @@ namespace CouplingAlturos
 
         private void btnOpenVideo_Click(object sender, EventArgs e)
         {
+			var list = new List<Item>();
 
-			var progress = new Progress<RecognitionResult>(result =>
+			var progress = new Progress<VideoRecognitionResult>(result =>
 			{
-                
+				list.Add(new Item(result));
+				if(list.Count > 15)
+				{
+					var validator = new FramesValidator(list);
+					if(validator.IsValid)
+					{
+						//result.IndexFrame
+					}
+					else
+					{
+						list.RemoveAt(0);
+					}
+				}
 				Debug.WriteLine("Eeee");
 			});
 
 
-			Task.Factory.StartNew(() =>
-			{
-				VideoDetector.Process("Resources/test.avi", progress); 
-			});
+			VideoThreadManager.Start("Resources/test.avi", progress);
 	
    //         var reader = new VideoFileReader();
    //         reader.Open("test.avi"); 
@@ -162,7 +172,7 @@ namespace CouplingAlturos
 			//reader.Close();
         }
 
-        private void logToXml(RecognitionResult result)
+        private void logToXml(IRecognitionResult result)
         {
          
             foreach(var item in result.Items)

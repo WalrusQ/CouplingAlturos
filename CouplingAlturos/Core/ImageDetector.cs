@@ -37,14 +37,14 @@ namespace CouplingAlturos.Core
 			return config;
 		}
 
-		public RecognitionResult Process(Image image)
+		public IRecognitionResult Process(Image image)
 		{
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
 			var items = _yolo.Detect(image.ToByteArray());
 			stopwatch.Stop();
 
-			return new RecognitionResult
+			return new ImageRecognitionResult
 			{
 				ElapsedTime = stopwatch.Elapsed,
 				Items = items,

@@ -25,6 +25,11 @@ namespace CouplingAlturos
 				.SingleInstance();
 
 			builder
+				.RegisterType<Logger>()
+				.As<ILogger>()
+				.SingleInstance();
+
+			builder
 				.RegisterType<ViewResolver>()
 				.As<IViewResolver>();
 

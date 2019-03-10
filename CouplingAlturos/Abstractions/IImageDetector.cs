@@ -7,6 +7,6 @@ namespace CouplingAlturos.Abstractions
 	{
 		YoloMetaInfo YoloMetaInfo { get; }
 
-		RecognitionResult Process(Image image);
+		IRecognitionResult Process(Image image);
 	}
 }

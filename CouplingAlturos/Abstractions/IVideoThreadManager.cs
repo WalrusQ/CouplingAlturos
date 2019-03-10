@@ -11,7 +11,7 @@ namespace CouplingAlturos.Abstractions
 		/// </summary>
 		/// <param name="filename">Имя файла</param>
 		/// <param name="progress">Callback</param>
-		void Start(string filename, IProgress<RecognitionResult> progress);
+		void Start(string filename, IProgress<VideoRecognitionResult> progress);
 
 		/// <summary>
 		/// Останавливает поток распознавания видеофайла

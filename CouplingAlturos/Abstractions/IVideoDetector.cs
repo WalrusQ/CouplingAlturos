@@ -9,6 +9,6 @@ namespace CouplingAlturos.Core
 		bool IsCanceling { get; set; }
 		bool IsStarted { get; set; }
 
-		void Process(string filename, IProgress<RecognitionResult> progress);
+		void Process(string filename, IProgress<VideoRecognitionResult> progress);
 	}
 }
