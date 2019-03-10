@@ -21,8 +21,6 @@ namespace CouplingAlturos
     
     public partial class MainForm : Form
     {
-        private YoloWrapper _yoloWrapper;
-
 		public IImageDetector ImageDetector { get; }
 
 		public IVideoThreadManager VideoThreadManager { get; }
@@ -35,49 +33,14 @@ namespace CouplingAlturos
             InitializeComponent();
 		}
 
-        private void Initialize(YoloConfiguration config)
-        {
-            try
-            {
-                
-	            _yoloWrapper?.Dispose();
-
-                var sw = new Stopwatch();
-                sw.Start();
-                _yoloWrapper = new YoloWrapper(config.ConfigFile, config.WeightsFile, config.NamesFile, 0, true);
-                sw.Stop();
-
-	            // Всё что ниже перепишу
-                var action = new MethodInvoker(delegate
-                {
-                    var detectionSystemDetail = string.Empty;
-                    if (!string.IsNullOrEmpty(_yoloWrapper.EnvironmentReport.GraphicDeviceName))
-                    {
-                        detectionSystemDetail = $"({_yoloWrapper.EnvironmentReport.GraphicDeviceName})";
-                    }
-                   
-                    toolStripStatusLabelYoloInfo.Text = $@"Initialize Yolo in {sw.Elapsed.TotalMilliseconds:0} ms - Detection System:{_yoloWrapper.DetectionSystem} {detectionSystemDetail} Weights:{config.WeightsFile}";
-                });
-
-                statusStrip1.Invoke(action);
-               
-                btnOpenVideo.Invoke(new MethodInvoker(delegate { btnOpenVideo.Enabled = true; }));
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show($@"{nameof(Initialize)} - {exception}", @"Error Initialize", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void btnOpen_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog ofd = new OpenFileDialog() { Filter = @"Image files(*.png; *.jpg; *.jpeg| *.png; *.jpg; *.jpeg"  })
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    pic.Image = Image.FromFile(ofd.FileName);
-                    RecognitionOutput(ImageDetector.Process(pic.Image));
-
+                    picBx.Image = Image.FromFile(ofd.FileName);
+                    RecognitionOutput(ImageDetector.Process(picBx.Image));
                 }
             }
         }
@@ -85,13 +48,13 @@ namespace CouplingAlturos
         private void RecognitionOutput(IRecognitionResult result)
         {
             dataGridViewResult.DataSource = result.Items;
-            DrawBorder2Image(result);
+            picBx.Image = DrawBorder2Image(result);
             logToXml(result);
         }
 
 
 
-        private void DrawBorder2Image(IRecognitionResult result)
+        private Image DrawBorder2Image(IRecognitionResult result)
         {
 
             var image = result.Image;
@@ -107,7 +70,7 @@ namespace CouplingAlturos
                     }
                 }
             }
-            pic.Image = image;
+            return image;
         }
 
         private Pen GetBrush(double confidence, int width)
@@ -128,29 +91,39 @@ namespace CouplingAlturos
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _yoloWrapper?.Dispose();
+            //todo: Надо ли что то тут делать?
         }
 
         private void btnOpenVideo_Click(object sender, EventArgs e)
         {
 			var list = new List<Item>();
-
+            long couplingLastFrame = 0;
+            var couplingCounter = 0;
 			var progress = new Progress<VideoRecognitionResult>(result =>
 			{
+                pic.Image = result.Image;
 				list.Add(new Item(result));
 				if(list.Count > 15)
 				{
 					var validator = new FramesValidator(list);
 					if(validator.IsValid)
 					{
-						//result.IndexFrame
+                        pic.Image = DrawBorder2Image(result);
+						if (result.IndexFrame - couplingLastFrame > 13)
+                        {
+                            couplingCounter++;
+                            couplingLastFrame = result.IndexFrame;
+                        }
 					}
-					else
-					{
-						list.RemoveAt(0);
-					}
+
+                    list.RemoveAt(0);
+
 				}
-				Debug.WriteLine("Eeee");
+                else
+                {
+                    pic.Image = result.Image;
+                }
+				
 			});
 
 
@@ -215,6 +188,11 @@ namespace CouplingAlturos
         private void pic_LoadCompleted(object sender, AsyncCompletedEventArgs e)
         {
             
+        }
+
+        private void PlayBtn_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
