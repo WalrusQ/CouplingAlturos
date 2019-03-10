@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading;
-
+using CouplingAlturos.Abstractions;
 using CouplingAlturos.Core.Models;
 
 namespace CouplingAlturos.Core
 {
-	public class VideoThreadManager
+	public class VideoThreadManager : IVideoThreadManager
 	{
 		private IVideoDetector VideoDetector { get; }
 
