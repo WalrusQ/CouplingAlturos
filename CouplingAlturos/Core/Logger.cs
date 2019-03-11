@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CouplingAlturos.Abstractions;
 using CouplingAlturos.Core.Models;
 
@@ -20,9 +21,16 @@ namespace CouplingAlturos.Core
 
 		public void Save(string path)
 		{
+			var strings = Messages.Select(x => x.ToString()); // todo: массив строк их и сохрани
+
             foreach(var msg in Messages)
             {
-                //todo: save
+				//todo: save
+				// — Сложно?
+				//Я переопределил у LogMessage ф-ию ToString, теперь она норм текст отдаст
+				var test = msg.ToString(); //
+
+
             }
 		}
 	}

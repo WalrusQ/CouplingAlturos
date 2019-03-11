@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstractions\IThreadManager.cs" />
+    <Compile Include="Abstractions\IVideoReaderThreadManager.cs" />
     <Compile Include="Abstractions\ILogger.cs" />
     <Compile Include="Core\Logger.cs" />
     <Compile Include="Core\Exception\ThreadAlreadyStartedException.cs" />
@@ -55,16 +55,17 @@
     <Compile Include="Core\Models\LogMessage.cs" />
     <Compile Include="Core\Models\RecognitionResults\VideoRecognitionResult.cs" />
     <Compile Include="Core\Models\FramesValidator.cs" />
-    <Compile Include="Core\ThreadManager.cs" />
+    <Compile Include="Core\RecognitionResultXmlSaver.cs" />
+    <Compile Include="Core\VideoReaderThreadManager.cs" />
     <Compile Include="RegistrationService.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Core\Converters\ImageConverter.cs" />
     <Compile Include="Abstractions\IImageDetector.cs" />
-    <Compile Include="Abstractions\IVideoDetector.cs" />
+    <Compile Include="Abstractions\IVideoReader.cs" />
     <Compile Include="Abstractions\IViewResolver.cs" />
     <Compile Include="Core\Models\YoloMetaInfo.cs" />
     <Compile Include="Core\Models\RecognitionResults\ImageRecognitionResult.cs" />
-    <Compile Include="Core\VideoDetector.cs" />
+    <Compile Include="Core\VideoReader.cs" />
     <Compile Include="Core\ViewResolver.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>

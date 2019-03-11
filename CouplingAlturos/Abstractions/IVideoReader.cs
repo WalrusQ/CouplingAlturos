@@ -4,11 +4,11 @@ using CouplingAlturos.Core.Models;
 
 namespace CouplingAlturos.Core
 {
-	public interface IVideoDetector
+	public interface IVideoReader
 	{
 		bool IsCanceling { get; set; }
 		bool IsStarted { get; set; }
 
-		void Process(string filename, IProgress<VideoRecognitionResult> progress);
+		void Read(string filename, IProgress<VideoRecognitionResult> progress);
 	}
 }

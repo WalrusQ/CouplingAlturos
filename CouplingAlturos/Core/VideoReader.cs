@@ -7,19 +7,19 @@ using CouplingAlturos.Core.Models;
 
 namespace CouplingAlturos.Core
 {
-	public class VideoDetector : IVideoDetector
+	public class VideoReader : IVideoReader
 	{
 		public bool IsCanceling { get; set; }
 		public bool IsStarted { get; set; }
 
 		private IImageDetector ImageDetector { get; }
 
-		public VideoDetector(IImageDetector imageDetector)
+		public VideoReader(IImageDetector imageDetector)
 		{
 			ImageDetector = imageDetector;
 		}
 
-		public void Process(string filename, IProgress<VideoRecognitionResult> progress)
+		public void Read(string filename, IProgress<VideoRecognitionResult> progress)
 		{
 			IsStarted = true;
 			using (var reader = new VideoFileReader())

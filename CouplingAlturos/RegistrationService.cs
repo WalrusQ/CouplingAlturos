@@ -16,12 +16,13 @@ namespace CouplingAlturos
 				.SingleInstance();
 
 			builder
-				.RegisterType<VideoDetector>()
-				.As<IVideoDetector>();
+				.RegisterType<VideoReader>()
+				.As<IVideoReader>();
 
 			builder
-				.RegisterType<ThreadManager>()
-				.As<IThreadManager>();
+				.RegisterType<VideoReaderThreadManager>()
+				.As<IVideoReaderThreadManager>()
+				.SingleInstance();
 
 			builder
 				.RegisterType<Logger>()

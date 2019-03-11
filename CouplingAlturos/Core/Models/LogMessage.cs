@@ -4,15 +4,20 @@ namespace CouplingAlturos.Core.Models
 {
 	public class LogMessage
 	{
-		public DateTime MessageTime { get; }
+		public DateTime Timestamp { get; }
 
 		public string Message { get; }
 
 		public LogMessage(string message)
 		{
 			//Посмотри сюды
-			MessageTime = DateTime.Now;
-            Message = MessageTime.ToString() + "\n" + message;
+			Timestamp = DateTime.Now;
+            Message = message;
         }
+
+		public override string ToString()
+		{
+			return $"{Timestamp:s} — {Message}";
+		}
 	}
 }

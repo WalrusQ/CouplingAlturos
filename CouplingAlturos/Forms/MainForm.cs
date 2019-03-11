@@ -38,19 +38,20 @@ namespace CouplingAlturos
 
 		public IImageDetector ImageDetector { get; }
 
-		public IVideoDetector VideoDetector { get; }
+		public IVideoReader VideoReader { get; }
 
-		public IThreadManager ThreadManager { get; }
+		public IVideoReaderThreadManager VideoReaderThreadManager { get; }
 
 		public ILogger Logger { get; }
 
-		public MainForm(IImageDetector imageDetector, IThreadManager threadManager, ILogger logger, IVideoDetector videoDetector)
+		public MainForm(IImageDetector imageDetector, IVideoReaderThreadManager videoReaderThreadManager, ILogger logger, IVideoReader videoReader)
 		{
 			//Сейчас приложение запускается только после инициализации Yolo, правильно ли это или нет, я хз
+			// — Предлагаешь мне прелоадер сделать?
 			ImageDetector = imageDetector;
-			ThreadManager = threadManager;
+			VideoReaderThreadManager = videoReaderThreadManager;
 			Logger = logger;
-			VideoDetector = videoDetector;
+			VideoReader = videoReader;
 
 			InitializeComponent();
 		}
@@ -59,23 +60,24 @@ namespace CouplingAlturos
 
 		private void btnOpen_Click(object sender, EventArgs e)
 		{ //Помню, ты что то против этого имел
-
-			using (OpenFileDialog ofd = new OpenFileDialog() { Filter = @"Image files(*.png; *.jpg; *.jpeg *.bmp | *.png; *.jpg; *.jpeg *.bmp" })
+			// — А что?)
+			using (var ofd = new OpenFileDialog() { Filter = @"Image files(*.png; *.jpg; *.jpeg *.bmp | *.png; *.jpg; *.jpeg *.bmp" })
 			{
 				if (ofd.ShowDialog() == DialogResult.OK)
 				{
 					picBx.Image = Image.FromFile(ofd.FileName);
-					RecognitionOutput(ImageDetector.Process(picBx.Image));
+					RecognitionOutput(ImageDetector.Process(picBx.Image), ofd.SafeFileName);
 				}
 			}
 		}
 
-		private void RecognitionOutput(IRecognitionResult result)
+		private void RecognitionOutput(IRecognitionResult result, string imageName)
 		{
 			//Функция только для изображений
 			dataGridViewResult.DataSource = result.Items;
 			picBx.Image = DrawBorder2Image(result);
-			LogToXml(result);
+			//todo: Внимательно, появилась такой екстеншен для результа
+			result.SaveToXml($@"Results/{imageName}.xml", imageName);
 		}
 
 
@@ -83,6 +85,7 @@ namespace CouplingAlturos
 		private Image DrawBorder2Image(IRecognitionResult result)
 		{
 			//Это тоже вынести в отдельный класс?
+			// — Да. Справишься? Справишься, я верю.
 			var image = result.ImageBytes.ToImage();
 			using (var canvas = Graphics.FromImage(image))
 			{
@@ -129,11 +132,11 @@ namespace CouplingAlturos
 			// — Это мне делать?
 			//todo: Сохранение лога после окончания видео или же при остановке видео
 			// — Или автосейв?
-
+			//Будет плохо если ещё раз нажмут на кнопку и вылезет ашибочка, наверн
 			_videoRecognitionResults = new VideoRecognitionResults();
 			var progress = new Progress<VideoRecognitionResult>(OnImageDetected);
 
-			ThreadManager.Start(() => VideoDetector.Process("Resources/test.avi", progress));
+			VideoReaderThreadManager.Start("Resources/test.avi", progress);
 		}
 
 		private void OnImageDetected(VideoRecognitionResult result)
@@ -167,46 +170,6 @@ namespace CouplingAlturos
 			}
 		}
 
-		private static void LogToXml(IRecognitionResult result)
-		{
-
-			foreach (var item in result.Items)
-			{
-				var xc = item.X;
-				var yc = item.Y;
-				var w = item.Width;
-				var h = item.Height;
-				//todo: use ImageInfo to output image name (or smth)
-				string xml = @"<Object>" + Environment.NewLine +
-					"  <Team Value=\"team6\" />" + Environment.NewLine +
-					"  <ImageName Value=" + "1.jpg" + " />" + Environment.NewLine +
-					"  <Region>" + Environment.NewLine +
-					"    <Main>" + Environment.NewLine +
-					"      <TopLeft X=" + (xc - w / 2) + " Y=" + (yc + h / 2) + " />" + Environment.NewLine +
-					"      <BotRight X=" + (xc + w / 2) + " Y=" + (yc - h / 2) + " />" + Environment.NewLine +
-					"    </Main>" + Environment.NewLine +
-					"    <Alternative>" + Environment.NewLine +
-					"      <Center X=" + xc + " Y=" + yc + "/>" + Environment.NewLine +
-					"      <Width Value=" + w + "/>" + Environment.NewLine +
-					"      <Height Value=" + h + "/>" + Environment.NewLine +
-					"    </Alternative>" + Environment.NewLine +
-					"    <EachPoint>" + Environment.NewLine +
-					"      <Point X=" + (xc - w / 2) + " Y=" + (yc + h / 2) + " />" + Environment.NewLine +
-					"      <!-- top-left -->" + Environment.NewLine +
-					"      <Point X=" + (xc + w / 2) + " Y=" + (yc + h / 2) + " />" + Environment.NewLine +
-					"      <!-- top-right -->" + Environment.NewLine +
-					"      <Point X=" + (xc + w / 2) + " Y=" + (yc - h / 2) + " />" + Environment.NewLine +
-					"      <!-- bottom-right -->" + Environment.NewLine +
-					"      <Point X=" + (xc - w / 2) + " Y=" + (yc - h / 2) + " />" + Environment.NewLine +
-					"      <!-- bottom-left -->" + Environment.NewLine +
-					"    </EachPoint>" + Environment.NewLine +
-					"  </Region>" + Environment.NewLine +
-					"</Object>" + Environment.NewLine;
-				File.WriteAllText(@"D:\Desktop\CouplingAlturos-master\Result\" + "1.jpg" + ".xml", xml);
-			}
-
-		}
-
 		private void pic_LoadCompleted(object sender, AsyncCompletedEventArgs e)
 		{
 
@@ -215,7 +178,7 @@ namespace CouplingAlturos
 		private void PlayBtn_Click(object sender, EventArgs e)
 		{
 			//Я хз какой магией там работет этот поток, и как его останавливать я тоже хз, собственно
-			//todo: ThreadManager.Stop(); не работает?
+			//todo: VideoReaderThreadManager.Stop(); не работает?
 		}
 
 		private void BtnOpenFolder_Click(object sender, EventArgs e)
@@ -227,16 +190,14 @@ namespace CouplingAlturos
 				folderDialog.SelectedPath = Application.StartupPath;
 				if(folderDialog.ShowDialog(this) == DialogResult.OK)
 				{
-					var images = new List<FileInfo>();
 					var path = new DirectoryInfo(folderDialog.SelectedPath);
-					var allFiles = path.GetFiles("*.*"); 
+					var allFiles = path.GetFiles("*.*");
 
-					foreach (var file in allFiles)
-					{
-						if (Regex.IsMatch(file.Name, @".jpg|.png|.jpeg$"))//todo: не знаю какие форматы надо
-							images.Add(file);
-					}
-					//todo: в images сейчас хранятся все изображения
+					var images = allFiles.Where(file => Regex.IsMatch(file.Name, @".jpg|.png|.jpeg$")).ToList(); //todo: не знаю какие форматы надо
+
+					//todo: в images сейчас хранятся все изображения. А дальше вопрос, можно также потоком, а можно задачей (различие в том, что задачи это для коротких операций). Решай, я реализую, или можешь сам рискнуть
+					//Далее ведь не составит проблем, да? Пишем что-то(выше), в прогрессе(IProgress<RecognitionResult>) получаем результат и сохраняем
+					//Сохранялку в хмл сделал, дешевое решение, позже переделаю, сначала надо её todo: проверить
 				} 
 			}
 		}
