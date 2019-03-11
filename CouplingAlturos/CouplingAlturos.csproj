@@ -47,15 +47,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstractions\IVideoThreadManager.cs" />
+    <Compile Include="Abstractions\IThreadManager.cs" />
     <Compile Include="Abstractions\ILogger.cs" />
     <Compile Include="Core\Logger.cs" />
     <Compile Include="Core\Exception\ThreadAlreadyStartedException.cs" />
     <Compile Include="Abstractions\IRecognitionResult.cs" />
     <Compile Include="Core\Models\LogMessage.cs" />
     <Compile Include="Core\Models\RecognitionResults\VideoRecognitionResult.cs" />
-    <Compile Include="Core\Models\Ф.cs" />
-    <Compile Include="Core\VideoThreadManager.cs" />
+    <Compile Include="Core\Models\FramesValidator.cs" />
+    <Compile Include="Core\ThreadManager.cs" />
     <Compile Include="RegistrationService.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Core\Converters\ImageConverter.cs" />

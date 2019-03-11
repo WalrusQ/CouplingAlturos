@@ -187,7 +187,7 @@
             this.btnOpenVideo.TabIndex = 2;
             this.btnOpenVideo.Text = "Open Video";
             this.btnOpenVideo.UseVisualStyleBackColor = true;
-            this.btnOpenVideo.Click += new System.EventHandler(this.btnOpenVideo_Click);
+            this.btnOpenVideo.Click += new System.EventHandler(this.BtnOpenVideo_Click);
             // 
             // button1
             // 

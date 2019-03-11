@@ -6,7 +6,6 @@ namespace CouplingAlturos.Core
 {
 	public class Logger : ILogger
 	{   
-
 		public List<LogMessage> Messages { get; }
 
         public Logger()

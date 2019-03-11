@@ -5,28 +5,28 @@ using CouplingAlturos.Core.Models;
 
 namespace CouplingAlturos.Core
 {
-	public class VideoThreadManager : IVideoThreadManager
+	public class ThreadManager : IThreadManager
 	{
 		private IVideoDetector VideoDetector { get; }
 
 		private Thread _thread;
 
-		public VideoThreadManager(IVideoDetector videoDetector)
+		public ThreadManager(IVideoDetector videoDetector)
 		{
 			VideoDetector = videoDetector;
 		}
 
-		public void Start(string filename, IProgress<VideoRecognitionResult> progress)
+		public void Start(Action action)
 		{
 			if(_thread?.ThreadState == ThreadState.Background 
 			   && _thread?.ThreadState == ThreadState.Running) throw new ThreadStateException();
 
 			VideoDetector.IsCanceling = false;
 
-			_thread = new Thread(() => VideoDetector.Process(filename, progress))
+			_thread = new Thread(() => action())
 			{
 				IsBackground = true,
-				Name = "VideoDecoderThread"
+				Name = action.Method.Name + "_Proccess"
 			};
 			_thread.Start();
 		}

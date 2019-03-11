@@ -20,9 +20,8 @@ namespace CouplingAlturos
 				.As<IVideoDetector>();
 
 			builder
-				.RegisterType<VideoThreadManager>()
-				.As<IVideoThreadManager>()
-				.SingleInstance();
+				.RegisterType<ThreadManager>()
+				.As<IThreadManager>();
 
 			builder
 				.RegisterType<Logger>()
