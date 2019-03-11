@@ -4,6 +4,7 @@ using System.Linq;
 namespace CouplingAlturos.Core.Models
 {
 	public class Item
+        //todo: rename file
 	{
 		public Item(IRecognitionResult result)
 		{

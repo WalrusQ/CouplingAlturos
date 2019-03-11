@@ -28,6 +28,7 @@ namespace CouplingAlturos
 
 		public MainForm(IImageDetector imageDetector, IVideoThreadManager videoThreadManager)
         {
+            //Сейчас приложение запускается только после инициализации Yolo, правильно ли это или нет, я хз
 	        ImageDetector = imageDetector;
 	        VideoThreadManager = videoThreadManager;
             
@@ -35,8 +36,9 @@ namespace CouplingAlturos
 		}
 
         private void btnOpen_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog ofd = new OpenFileDialog() { Filter = @"ImageBytes files(*.png; *.jpg; *.jpeg| *.png; *.jpg; *.jpeg"  })
+        { //Помню, ты что то против этого имел
+            
+            using (OpenFileDialog ofd = new OpenFileDialog() { Filter = @"Image files(*.png; *.jpg; *.jpeg *.bmp | *.png; *.jpg; *.jpeg *.bmp"  })
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
@@ -48,6 +50,7 @@ namespace CouplingAlturos
 
         private void RecognitionOutput(IRecognitionResult result)
         {
+            //Функция только для изображений
             dataGridViewResult.DataSource = result.Items;
             picBx.Image = DrawBorder2Image(result);
             logToXml(result);
@@ -57,7 +60,7 @@ namespace CouplingAlturos
 
         private Image DrawBorder2Image(IRecognitionResult result)
         {
-
+            //Это тоже вынести в отдельный класс?
             var image = result.ImageBytes.ToImage();
             using (var canvas = Graphics.FromImage(image))
             {
@@ -76,6 +79,7 @@ namespace CouplingAlturos
 
         private Pen GetBrush(double confidence, int width)
         {
+            //Это тоже вынести в отдельный класс?
             var size = width / 100;
 
             if (confidence > 0.5)
@@ -97,6 +101,9 @@ namespace CouplingAlturos
 
         private void btnOpenVideo_Click(object sender, EventArgs e)
         {
+            //todo: открытие видео из файла и вывод пути к нему в текстбокс
+            //todo: Сохранение лога после окончания видео или же при остановке видео
+            var log = new Logger(); 
 			var list = new List<Item>();
             long couplingLastFrame = 0;
             var couplingCounter = 0;
@@ -113,8 +120,21 @@ namespace CouplingAlturos
 						if (result.IndexFrame - couplingLastFrame > 13)
                         {
                             couplingCounter++;
-                            couplingLastFrame = result.IndexFrame;
+                            CouplingCounterLabel.Text = couplingCounter.ToString();
+                            foreach(var item in result.Items)
+                            {
+                                //Делаю +- функционал, который потом нужно красиво оформить
+                                var logmsg = "Номер кадра: " + result.IndexFrame.ToString() + ".\nКоординаты центра X: " + item.X + "; Y:  " + item.Y + ".\nШирина: " + item.Width + " Высота: " + item.Height;
+                                log.WriteLine(logmsg);
+                                LogTxtBx.AppendText(log.Messages.Last().Message);
+                                
+                                
+                            }
+                            
+
                         }
+                        couplingLastFrame = result.IndexFrame;
+
 					}
 
                     list.RemoveAt(0);
@@ -193,6 +213,12 @@ namespace CouplingAlturos
 
         private void PlayBtn_Click(object sender, EventArgs e)
         {
+            //Я хз какой магией там работет этот поток, и как его останавливать я тоже хз, собственно
+        }
+
+        private void BtnOpenFolder_Click(object sender, EventArgs e)
+        {
+            //todo: Открыть папку и задетектить все картинки в ней и сохранить все в хмл в соседнюю папку
 
         }
     }

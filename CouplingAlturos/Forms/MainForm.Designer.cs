@@ -38,7 +38,7 @@
             this.heightDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.yoloItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pic = new System.Windows.Forms.PictureBox();
-            this.btnOpen = new System.Windows.Forms.Button();
+            this.btnOpenFile = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelYoloInfo = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBoxResult = new System.Windows.Forms.GroupBox();
@@ -53,6 +53,9 @@
             this.PhotoPg = new System.Windows.Forms.TabPage();
             this.OpenPhotoTxtBx = new System.Windows.Forms.RichTextBox();
             this.picBx = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.CouplingCounterLabel = new System.Windows.Forms.Label();
+            this.BtnOpenFolder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResult)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.yoloItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
@@ -143,15 +146,15 @@
             this.pic.TabStop = false;
             this.pic.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pic_LoadCompleted);
             // 
-            // btnOpen
+            // btnOpenFile
             // 
-            this.btnOpen.Location = new System.Drawing.Point(9, 6);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(75, 23);
-            this.btnOpen.TabIndex = 2;
-            this.btnOpen.Text = "Open";
-            this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            this.btnOpenFile.Location = new System.Drawing.Point(9, 6);
+            this.btnOpenFile.Name = "btnOpenFile";
+            this.btnOpenFile.Size = new System.Drawing.Size(75, 23);
+            this.btnOpenFile.TabIndex = 2;
+            this.btnOpenFile.Text = "Open File";
+            this.btnOpenFile.UseVisualStyleBackColor = true;
+            this.btnOpenFile.Click += new System.EventHandler(this.btnOpen_Click);
             // 
             // statusStrip1
             // 
@@ -188,7 +191,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(353, 359);
+            this.button1.Location = new System.Drawing.Point(172, 359);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 5;
@@ -207,6 +210,8 @@
             // 
             // VideoPg
             // 
+            this.VideoPg.Controls.Add(this.CouplingCounterLabel);
+            this.VideoPg.Controls.Add(this.label1);
             this.VideoPg.Controls.Add(this.OpenVideoTxtBx);
             this.VideoPg.Controls.Add(this.LogTxtBx);
             this.VideoPg.Controls.Add(this.pic);
@@ -240,7 +245,7 @@
             // 
             // PauseBtn
             // 
-            this.PauseBtn.Location = new System.Drawing.Point(272, 359);
+            this.PauseBtn.Location = new System.Drawing.Point(91, 359);
             this.PauseBtn.Name = "PauseBtn";
             this.PauseBtn.Size = new System.Drawing.Size(75, 23);
             this.PauseBtn.TabIndex = 5;
@@ -249,7 +254,7 @@
             // 
             // PlayBtn
             // 
-            this.PlayBtn.Location = new System.Drawing.Point(191, 359);
+            this.PlayBtn.Location = new System.Drawing.Point(9, 359);
             this.PlayBtn.Name = "PlayBtn";
             this.PlayBtn.Size = new System.Drawing.Size(75, 23);
             this.PlayBtn.TabIndex = 5;
@@ -259,10 +264,11 @@
             // 
             // PhotoPg
             // 
+            this.PhotoPg.Controls.Add(this.BtnOpenFolder);
             this.PhotoPg.Controls.Add(this.OpenPhotoTxtBx);
             this.PhotoPg.Controls.Add(this.picBx);
             this.PhotoPg.Controls.Add(this.dataGridViewResult);
-            this.PhotoPg.Controls.Add(this.btnOpen);
+            this.PhotoPg.Controls.Add(this.btnOpenFile);
             this.PhotoPg.Location = new System.Drawing.Point(4, 22);
             this.PhotoPg.Name = "PhotoPg";
             this.PhotoPg.Padding = new System.Windows.Forms.Padding(3);
@@ -273,9 +279,9 @@
             // 
             // OpenPhotoTxtBx
             // 
-            this.OpenPhotoTxtBx.Location = new System.Drawing.Point(90, 6);
+            this.OpenPhotoTxtBx.Location = new System.Drawing.Point(201, 6);
             this.OpenPhotoTxtBx.Name = "OpenPhotoTxtBx";
-            this.OpenPhotoTxtBx.Size = new System.Drawing.Size(559, 22);
+            this.OpenPhotoTxtBx.Size = new System.Drawing.Size(448, 22);
             this.OpenPhotoTxtBx.TabIndex = 8;
             this.OpenPhotoTxtBx.Text = "";
             // 
@@ -289,6 +295,34 @@
             this.picBx.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picBx.TabIndex = 3;
             this.picBx.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(394, 360);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(112, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Обнаружено сцепок:";
+            // 
+            // CouplingCounterLabel
+            // 
+            this.CouplingCounterLabel.AutoSize = true;
+            this.CouplingCounterLabel.Location = new System.Drawing.Point(512, 360);
+            this.CouplingCounterLabel.Name = "CouplingCounterLabel";
+            this.CouplingCounterLabel.Size = new System.Drawing.Size(13, 13);
+            this.CouplingCounterLabel.TabIndex = 9;
+            this.CouplingCounterLabel.Text = "0";
+            // 
+            // BtnOpenFolder
+            // 
+            this.BtnOpenFolder.Location = new System.Drawing.Point(120, 5);
+            this.BtnOpenFolder.Name = "BtnOpenFolder";
+            this.BtnOpenFolder.Size = new System.Drawing.Size(75, 23);
+            this.BtnOpenFolder.TabIndex = 9;
+            this.BtnOpenFolder.Text = "Open Folder";
+            this.BtnOpenFolder.UseVisualStyleBackColor = true;
+            this.BtnOpenFolder.Click += new System.EventHandler(this.BtnOpenFolder_Click);
             // 
             // MainForm
             // 
@@ -310,6 +344,7 @@
             this.statusStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.VideoPg.ResumeLayout(false);
+            this.VideoPg.PerformLayout();
             this.PhotoPg.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picBx)).EndInit();
             this.ResumeLayout(false);
@@ -321,7 +356,7 @@
 
         private System.Windows.Forms.DataGridView dataGridViewResult;
         private System.Windows.Forms.PictureBox pic;
-        private System.Windows.Forms.Button btnOpen;
+        private System.Windows.Forms.Button btnOpenFile;
         private System.Windows.Forms.BindingSource yoloItemBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn confidenceDataGridViewTextBoxColumn;
@@ -343,6 +378,9 @@
         private System.Windows.Forms.Button PauseBtn;
         private System.Windows.Forms.Button PlayBtn;
         private System.Windows.Forms.RichTextBox OpenPhotoTxtBx;
+        private System.Windows.Forms.Label CouplingCounterLabel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button BtnOpenFolder;
     }
 }
 
