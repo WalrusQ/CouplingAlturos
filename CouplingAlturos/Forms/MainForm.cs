@@ -104,8 +104,11 @@ namespace CouplingAlturos
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			//todo: Надо ли что то тут делать?
-			// — Пока нет
+            //Предположительное решение сохранения лога, или можно сделать автосейв через каждую строку
+			if(_videoRecognitionResults != null)
+            {
+                Logger.Save($@"Results/{DateTime.Now.ToString("dd/MM/yy HH-mm-ss")}.txt");
+            }
 		}
 
         private void BtnOpenVideo_Click(object sender, EventArgs e)
@@ -118,10 +121,8 @@ namespace CouplingAlturos
                     OpenVideoTxtBx.Text = ofd.FileName;
                     VideoFile = ofd.FileName;
                     pic.BackColor = Color.Black;
-                    
+                    PlayBtn.Enabled = true; //Можно лочить кнопки в определенных условиях, можно просто обрабатывать множественные нажатия, как лучше сделать?
                 }
-                //todo: открытие видео из файла и вывод пути к нему в текстбок
-                // — Это мне делать?
                 //todo: Сохранение лога после окончания видео или же при остановке видео
                 // — Или автосейв?
                 //Будет плохо если ещё раз нажмут на кнопку и вылезет ашибочка, наверн
@@ -173,6 +174,7 @@ namespace CouplingAlturos
 		{
             _videoRecognitionResults = new VideoRecognitionResults();
             var progress = new Progress<VideoRecognitionResult>(OnImageDetected);
+            PlayBtn.Enabled = false;
             VideoReaderThreadManager.Start(VideoFile, progress);
         }
 
@@ -200,6 +202,9 @@ namespace CouplingAlturos
         private void BtnStopVideo_Click(object sender, EventArgs e)
         {
             VideoReaderThreadManager.Stop();
+            Logger.Save($@"Results/{DateTime.Now.ToString("dd/MM/yy HH-mm-ss")}.txt");
+            Logger.Clear();
+            PlayBtn.Enabled = true;
         }
 
         private void PauseBtn_Click(object sender, EventArgs e)

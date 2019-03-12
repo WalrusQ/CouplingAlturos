@@ -275,6 +275,7 @@
             // 
             // PlayBtn
             // 
+            this.PlayBtn.Enabled = false;
             this.PlayBtn.Location = new System.Drawing.Point(9, 359);
             this.PlayBtn.Name = "PlayBtn";
             this.PlayBtn.Size = new System.Drawing.Size(75, 23);

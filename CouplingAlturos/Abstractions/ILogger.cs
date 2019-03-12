@@ -8,5 +8,6 @@ namespace CouplingAlturos.Abstractions
 		List<LogMessage> Messages { get; }
 		void WriteLine(string message);
 		void Save(string path);
+        void Clear();
 	}
 }
