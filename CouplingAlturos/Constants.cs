@@ -5,5 +5,8 @@
 		public static string ResourceFolder = "Resources/";
 
 		public static bool GpuEnabled = false;
+
+		public static string TeamName = "team6";
+
 	}
 }
