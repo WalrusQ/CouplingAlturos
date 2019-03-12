@@ -39,7 +39,7 @@
             this.yoloItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pic = new System.Windows.Forms.PictureBox();
             this.btnOpenFile = new System.Windows.Forms.Button();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelYoloInfo = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBoxResult = new System.Windows.Forms.GroupBox();
             this.btnOpenVideo = new System.Windows.Forms.Button();
@@ -54,12 +54,14 @@
             this.PlayBtn = new System.Windows.Forms.Button();
             this.PhotoPg = new System.Windows.Forms.TabPage();
             this.BtnOpenFolder = new System.Windows.Forms.Button();
-            this.OpenPhotoTxtBx = new System.Windows.Forms.RichTextBox();
             this.picBx = new System.Windows.Forms.PictureBox();
+            this.OpenPhotoTxtBx = new System.Windows.Forms.RichTextBox();
+            this.OpenFolderPhotoTxtBx = new System.Windows.Forms.RichTextBox();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResult)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.yoloItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
-            this.statusStrip1.SuspendLayout();
+            this.StatusStrip.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.VideoPg.SuspendLayout();
             this.PhotoPg.SuspendLayout();
@@ -80,10 +82,10 @@
             this.widthDataGridViewTextBoxColumn,
             this.heightDataGridViewTextBoxColumn});
             this.dataGridViewResult.DataSource = this.yoloItemBindingSource;
-            this.dataGridViewResult.Location = new System.Drawing.Point(9, 384);
+            this.dataGridViewResult.Location = new System.Drawing.Point(6, 449);
             this.dataGridViewResult.Name = "dataGridViewResult";
             this.dataGridViewResult.ReadOnly = true;
-            this.dataGridViewResult.Size = new System.Drawing.Size(643, 148);
+            this.dataGridViewResult.Size = new System.Drawing.Size(643, 54);
             this.dataGridViewResult.TabIndex = 0;
             // 
             // typeDataGridViewTextBoxColumn
@@ -144,7 +146,6 @@
             this.pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pic.TabIndex = 1;
             this.pic.TabStop = false;
-            this.pic.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pic_LoadCompleted);
             // 
             // btnOpenFile
             // 
@@ -156,15 +157,15 @@
             this.btnOpenFile.UseVisualStyleBackColor = true;
             this.btnOpenFile.Click += new System.EventHandler(this.btnOpen_Click);
             // 
-            // statusStrip1
+            // StatusStrip
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabelYoloInfo});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 540);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(661, 22);
-            this.statusStrip1.TabIndex = 3;
-            this.statusStrip1.Text = "statusStrip1";
+            this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelYoloInfo,
+            this.toolStripStatusLabel1});
+            this.StatusStrip.Location = new System.Drawing.Point(0, 560);
+            this.StatusStrip.Name = "StatusStrip";
+            this.StatusStrip.Size = new System.Drawing.Size(661, 22);
+            this.StatusStrip.TabIndex = 3;
             // 
             // toolStripStatusLabelYoloInfo
             // 
@@ -270,6 +271,7 @@
             this.PauseBtn.TabIndex = 5;
             this.PauseBtn.Text = "Pause";
             this.PauseBtn.UseVisualStyleBackColor = true;
+            this.PauseBtn.Click += new System.EventHandler(this.PauseBtn_Click);
             // 
             // PlayBtn
             // 
@@ -283,6 +285,7 @@
             // 
             // PhotoPg
             // 
+            this.PhotoPg.Controls.Add(this.OpenFolderPhotoTxtBx);
             this.PhotoPg.Controls.Add(this.BtnOpenFolder);
             this.PhotoPg.Controls.Add(this.OpenPhotoTxtBx);
             this.PhotoPg.Controls.Add(this.picBx);
@@ -298,7 +301,7 @@
             // 
             // BtnOpenFolder
             // 
-            this.BtnOpenFolder.Location = new System.Drawing.Point(120, 5);
+            this.BtnOpenFolder.Location = new System.Drawing.Point(3, 509);
             this.BtnOpenFolder.Name = "BtnOpenFolder";
             this.BtnOpenFolder.Size = new System.Drawing.Size(75, 23);
             this.BtnOpenFolder.TabIndex = 9;
@@ -306,33 +309,46 @@
             this.BtnOpenFolder.UseVisualStyleBackColor = true;
             this.BtnOpenFolder.Click += new System.EventHandler(this.BtnOpenFolder_Click);
             // 
-            // OpenPhotoTxtBx
-            // 
-            this.OpenPhotoTxtBx.Location = new System.Drawing.Point(201, 6);
-            this.OpenPhotoTxtBx.Name = "OpenPhotoTxtBx";
-            this.OpenPhotoTxtBx.Size = new System.Drawing.Size(448, 22);
-            this.OpenPhotoTxtBx.TabIndex = 8;
-            this.OpenPhotoTxtBx.Text = "";
-            // 
             // picBx
             // 
             this.picBx.BackColor = System.Drawing.Color.White;
             this.picBx.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picBx.Location = new System.Drawing.Point(9, 35);
             this.picBx.Name = "picBx";
-            this.picBx.Size = new System.Drawing.Size(640, 315);
+            this.picBx.Size = new System.Drawing.Size(640, 408);
             this.picBx.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picBx.TabIndex = 3;
             this.picBx.TabStop = false;
+            // 
+            // OpenPhotoTxtBx
+            // 
+            this.OpenPhotoTxtBx.Location = new System.Drawing.Point(90, 6);
+            this.OpenPhotoTxtBx.Name = "OpenPhotoTxtBx";
+            this.OpenPhotoTxtBx.Size = new System.Drawing.Size(555, 22);
+            this.OpenPhotoTxtBx.TabIndex = 8;
+            this.OpenPhotoTxtBx.Text = "";
+            // 
+            // OpenFolderPhotoTxtBx
+            // 
+            this.OpenFolderPhotoTxtBx.Location = new System.Drawing.Point(84, 510);
+            this.OpenFolderPhotoTxtBx.Name = "OpenFolderPhotoTxtBx";
+            this.OpenFolderPhotoTxtBx.Size = new System.Drawing.Size(555, 22);
+            this.OpenFolderPhotoTxtBx.TabIndex = 10;
+            this.OpenFolderPhotoTxtBx.Text = "";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(661, 562);
+            this.ClientSize = new System.Drawing.Size(661, 582);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.groupBoxResult);
-            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.StatusStrip);
             this.MinimizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -341,8 +357,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResult)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.yoloItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).EndInit();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.StatusStrip.ResumeLayout(false);
+            this.StatusStrip.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.VideoPg.ResumeLayout(false);
             this.VideoPg.PerformLayout();
@@ -365,7 +381,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn yDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn widthDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn heightDataGridViewTextBoxColumn;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip StatusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelYoloInfo;
         private System.Windows.Forms.GroupBox groupBoxResult;
         private System.Windows.Forms.Button btnOpenVideo;
@@ -378,10 +394,12 @@
         private System.Windows.Forms.RichTextBox LogTxtBx;
         private System.Windows.Forms.Button PauseBtn;
         private System.Windows.Forms.Button PlayBtn;
-        private System.Windows.Forms.RichTextBox OpenPhotoTxtBx;
         private System.Windows.Forms.Label CouplingCounterLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button BtnOpenFolder;
+        private System.Windows.Forms.RichTextBox OpenFolderPhotoTxtBx;
+        private System.Windows.Forms.RichTextBox OpenPhotoTxtBx;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
 
