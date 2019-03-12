@@ -52,6 +52,7 @@
     <Compile Include="Core\Logger.cs" />
     <Compile Include="Core\Exception\ThreadAlreadyStartedException.cs" />
     <Compile Include="Abstractions\IRecognitionResult.cs" />
+    <Compile Include="Core\Models\ImageLogger.cs" />
     <Compile Include="Core\Models\LogMessage.cs" />
     <Compile Include="Core\Models\RecognitionResults\VideoRecognitionResult.cs" />
     <Compile Include="Core\Models\FramesValidator.cs" />
@@ -127,6 +128,9 @@
     </PackageReference>
     <PackageReference Include="Autofac">
       <Version>4.9.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

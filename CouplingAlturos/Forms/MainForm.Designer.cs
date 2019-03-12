@@ -43,19 +43,19 @@
             this.toolStripStatusLabelYoloInfo = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBoxResult = new System.Windows.Forms.GroupBox();
             this.btnOpenVideo = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.BtnStopVideo = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.VideoPg = new System.Windows.Forms.TabPage();
+            this.CouplingCounterLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.OpenVideoTxtBx = new System.Windows.Forms.RichTextBox();
             this.LogTxtBx = new System.Windows.Forms.RichTextBox();
             this.PauseBtn = new System.Windows.Forms.Button();
             this.PlayBtn = new System.Windows.Forms.Button();
             this.PhotoPg = new System.Windows.Forms.TabPage();
+            this.BtnOpenFolder = new System.Windows.Forms.Button();
             this.OpenPhotoTxtBx = new System.Windows.Forms.RichTextBox();
             this.picBx = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.CouplingCounterLabel = new System.Windows.Forms.Label();
-            this.BtnOpenFolder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResult)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.yoloItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
@@ -189,14 +189,15 @@
             this.btnOpenVideo.UseVisualStyleBackColor = true;
             this.btnOpenVideo.Click += new System.EventHandler(this.BtnOpenVideo_Click);
             // 
-            // button1
+            // BtnStopVideo
             // 
-            this.button1.Location = new System.Drawing.Point(172, 359);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Stop";
-            this.button1.UseVisualStyleBackColor = true;
+            this.BtnStopVideo.Location = new System.Drawing.Point(172, 359);
+            this.BtnStopVideo.Name = "BtnStopVideo";
+            this.BtnStopVideo.Size = new System.Drawing.Size(75, 23);
+            this.BtnStopVideo.TabIndex = 5;
+            this.BtnStopVideo.Text = "Stop";
+            this.BtnStopVideo.UseVisualStyleBackColor = true;
+            this.BtnStopVideo.Click += new System.EventHandler(this.BtnStopVideo_Click);
             // 
             // tabControl1
             // 
@@ -217,7 +218,7 @@
             this.VideoPg.Controls.Add(this.pic);
             this.VideoPg.Controls.Add(this.PauseBtn);
             this.VideoPg.Controls.Add(this.PlayBtn);
-            this.VideoPg.Controls.Add(this.button1);
+            this.VideoPg.Controls.Add(this.BtnStopVideo);
             this.VideoPg.Controls.Add(this.btnOpenVideo);
             this.VideoPg.Location = new System.Drawing.Point(4, 22);
             this.VideoPg.Name = "VideoPg";
@@ -226,6 +227,24 @@
             this.VideoPg.TabIndex = 0;
             this.VideoPg.Text = "Видео";
             this.VideoPg.UseVisualStyleBackColor = true;
+            // 
+            // CouplingCounterLabel
+            // 
+            this.CouplingCounterLabel.AutoSize = true;
+            this.CouplingCounterLabel.Location = new System.Drawing.Point(512, 360);
+            this.CouplingCounterLabel.Name = "CouplingCounterLabel";
+            this.CouplingCounterLabel.Size = new System.Drawing.Size(13, 13);
+            this.CouplingCounterLabel.TabIndex = 9;
+            this.CouplingCounterLabel.Text = "0";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(394, 360);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(112, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Обнаружено сцепок:";
             // 
             // OpenVideoTxtBx
             // 
@@ -277,6 +296,16 @@
             this.PhotoPg.Text = "Фото";
             this.PhotoPg.UseVisualStyleBackColor = true;
             // 
+            // BtnOpenFolder
+            // 
+            this.BtnOpenFolder.Location = new System.Drawing.Point(120, 5);
+            this.BtnOpenFolder.Name = "BtnOpenFolder";
+            this.BtnOpenFolder.Size = new System.Drawing.Size(75, 23);
+            this.BtnOpenFolder.TabIndex = 9;
+            this.BtnOpenFolder.Text = "Open Folder";
+            this.BtnOpenFolder.UseVisualStyleBackColor = true;
+            this.BtnOpenFolder.Click += new System.EventHandler(this.BtnOpenFolder_Click);
+            // 
             // OpenPhotoTxtBx
             // 
             this.OpenPhotoTxtBx.Location = new System.Drawing.Point(201, 6);
@@ -295,34 +324,6 @@
             this.picBx.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picBx.TabIndex = 3;
             this.picBx.TabStop = false;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(394, 360);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(112, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Обнаружено сцепок:";
-            // 
-            // CouplingCounterLabel
-            // 
-            this.CouplingCounterLabel.AutoSize = true;
-            this.CouplingCounterLabel.Location = new System.Drawing.Point(512, 360);
-            this.CouplingCounterLabel.Name = "CouplingCounterLabel";
-            this.CouplingCounterLabel.Size = new System.Drawing.Size(13, 13);
-            this.CouplingCounterLabel.TabIndex = 9;
-            this.CouplingCounterLabel.Text = "0";
-            // 
-            // BtnOpenFolder
-            // 
-            this.BtnOpenFolder.Location = new System.Drawing.Point(120, 5);
-            this.BtnOpenFolder.Name = "BtnOpenFolder";
-            this.BtnOpenFolder.Size = new System.Drawing.Size(75, 23);
-            this.BtnOpenFolder.TabIndex = 9;
-            this.BtnOpenFolder.Text = "Open Folder";
-            this.BtnOpenFolder.UseVisualStyleBackColor = true;
-            this.BtnOpenFolder.Click += new System.EventHandler(this.BtnOpenFolder_Click);
             // 
             // MainForm
             // 
@@ -368,7 +369,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelYoloInfo;
         private System.Windows.Forms.GroupBox groupBoxResult;
         private System.Windows.Forms.Button btnOpenVideo;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button BtnStopVideo;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage VideoPg;
 		private System.Windows.Forms.TabPage PhotoPg;

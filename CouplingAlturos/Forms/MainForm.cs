@@ -48,6 +48,7 @@ namespace CouplingAlturos
 		{
 			//Сейчас приложение запускается только после инициализации Yolo, правильно ли это или нет, я хз
 			// — Предлагаешь мне прелоадер сделать?
+            //я хз, я не знаю как лучше
 			ImageDetector = imageDetector;
 			VideoReaderThreadManager = videoReaderThreadManager;
 			Logger = logger;
@@ -56,11 +57,10 @@ namespace CouplingAlturos
 			InitializeComponent();
 		}
 
-		private VideoRecognitionResults _videoRecognitionResults;
+		private VideoRecognitionResults _videoRecognitionResults; //Для него интерфейс я полагаю тоже нужно сделать
 
 		private void btnOpen_Click(object sender, EventArgs e)
-		{ //Помню, ты что то против этого имел
-			// — А что?)
+		{ 
 			using (var ofd = new OpenFileDialog() { Filter = @"Image files(*.png; *.jpg; *.jpeg *.bmp | *.png; *.jpg; *.jpeg *.bmp" })
 			{
 				if (ofd.ShowDialog() == DialogResult.OK)
@@ -84,16 +84,13 @@ namespace CouplingAlturos
 
 		private Image DrawBorder2Image(IRecognitionResult result)
 		{
-			//Это тоже вынести в отдельный класс?
-			// — Да. Справишься? Справишься, я верю.
+           // А можно это экстеншном сделать для RecognitionResult?
 			var image = result.ImageBytes.ToImage();
 			using (var canvas = Graphics.FromImage(image))
 			{
 				foreach (var item in result.Items)
 				{
-					//overlayBrush Где используется?
-					using (var overlayBrush = new SolidBrush(Color.FromArgb(150, 255, 255, 102)))
-					using (var pen = GetBrush(item.Confidence, image.Width))
+					using (var pen = new Pen(Brushes.GreenYellow, image.Width / 100))
 					{
 						canvas.DrawRectangle(pen, item.X, item.Y, item.Width, item.Height);
 						canvas.Flush();
@@ -103,41 +100,33 @@ namespace CouplingAlturos
 			return image;
 		}
 
-		private Pen GetBrush(double confidence, int width)
-		{
-			//Это тоже вынести в отдельный класс?
-			var size = width / 100;
-
-			if (confidence > 0.5)
-			{
-				return new Pen(Brushes.GreenYellow, size);
-			}
-			else if (confidence > 0.2 && confidence <= 0.5)
-			{
-				return new Pen(Brushes.Orange, size);
-			}
-
-			return new Pen(Brushes.DarkRed, size);
-		}
-
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			//todo: Надо ли что то тут делать?
 			// — Пока нет
 		}
 
-		private void BtnOpenVideo_Click(object sender, EventArgs e)
-		{
-			//todo: открытие видео из файла и вывод пути к нему в текстбок
-			// — Это мне делать?
-			//todo: Сохранение лога после окончания видео или же при остановке видео
-			// — Или автосейв?
-			//Будет плохо если ещё раз нажмут на кнопку и вылезет ашибочка, наверн
-			_videoRecognitionResults = new VideoRecognitionResults();
-			var progress = new Progress<VideoRecognitionResult>(OnImageDetected);
+        private void BtnOpenVideo_Click(object sender, EventArgs e)
+        {
 
-			VideoReaderThreadManager.Start("Resources/test.avi", progress);
-		}
+            using (var ofd = new OpenFileDialog() { Filter = @"Video File(*.avi | *.avi" })
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    picBx.Image = Image.FromFile(ofd.FileName);
+                    RecognitionOutput(ImageDetector.Process(picBx.Image), ofd.SafeFileName);
+                }
+                //todo: открытие видео из файла и вывод пути к нему в текстбок
+                // — Это мне делать?
+                //todo: Сохранение лога после окончания видео или же при остановке видео
+                // — Или автосейв?
+                //Будет плохо если ещё раз нажмут на кнопку и вылезет ашибочка, наверн
+                _videoRecognitionResults = new VideoRecognitionResults();
+                var progress = new Progress<VideoRecognitionResult>(OnImageDetected);
+
+                VideoReaderThreadManager.Start("Resources/test.avi", progress);
+            }
+        }
 
 		private void OnImageDetected(VideoRecognitionResult result)
 		{
@@ -177,8 +166,7 @@ namespace CouplingAlturos
 
 		private void PlayBtn_Click(object sender, EventArgs e)
 		{
-			//Я хз какой магией там работет этот поток, и как его останавливать я тоже хз, собственно
-			//todo: VideoReaderThreadManager.Stop(); не работает?
+			
 		}
 
 		private void BtnOpenFolder_Click(object sender, EventArgs e)
@@ -201,5 +189,10 @@ namespace CouplingAlturos
 				} 
 			}
 		}
-	}
+
+        private void BtnStopVideo_Click(object sender, EventArgs e)
+        {
+            VideoReaderThreadManager.Stop();
+        }
+    }
 }
