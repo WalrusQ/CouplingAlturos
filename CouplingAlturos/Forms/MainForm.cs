@@ -17,6 +17,7 @@ using CouplingAlturos.Core;
 using CouplingAlturos.Core.Converters;
 using CouplingAlturos.Core.Models;
 using CouplingAlturos.Model;
+using System.Text;
 
 namespace CouplingAlturos
 {
@@ -73,10 +74,8 @@ namespace CouplingAlturos
 
 		private void RecognitionOutput(IRecognitionResult result, string imageName)
 		{
-			//Функция только для изображений
 			dataGridViewResult.DataSource = result.Items;
-			picBx.Image = DrawBorder2Image(result);
-			//todo: Внимательно, появилась такой екстеншен для результа
+            picBx.Image = DrawBorder2Image(result);
 			result.SaveToXml($@"Results/{imageName}.xml", imageName);
 		}
 
@@ -113,18 +112,18 @@ namespace CouplingAlturos
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    picBx.Image = Image.FromFile(ofd.FileName);
-                    RecognitionOutput(ImageDetector.Process(picBx.Image), ofd.SafeFileName);
+                    var path = Path.GetDirectoryName(ofd.FileName);
+                    OpenVideoTxtBx.Text = path;
+                    _videoRecognitionResults = new VideoRecognitionResults();
+                    var progress = new Progress<VideoRecognitionResult>(OnImageDetected);
+                    VideoReaderThreadManager.Start(path, progress);
                 }
                 //todo: открытие видео из файла и вывод пути к нему в текстбок
                 // — Это мне делать?
                 //todo: Сохранение лога после окончания видео или же при остановке видео
                 // — Или автосейв?
                 //Будет плохо если ещё раз нажмут на кнопку и вылезет ашибочка, наверн
-                _videoRecognitionResults = new VideoRecognitionResults();
-                var progress = new Progress<VideoRecognitionResult>(OnImageDetected);
-
-                VideoReaderThreadManager.Start("Resources/test.avi", progress);
+               
             }
         }
 
@@ -144,11 +143,7 @@ namespace CouplingAlturos
 						CouplingCounterLabel.Text = _videoRecognitionResults.Counter.ToString();
 						foreach (var item in result.Items)
 						{
-							//Делаю +- функционал, который потом нужно красиво оформить
-							//Выведи в отдельную функцию эту хрень, юзай StringBuilder
-							var msg = "Номер кадра: " + result.IndexFrame.ToString() + ".\nКоординаты центра X: " + item.X + "; Y:  " + item.Y + ".\nШирина: " + item.Width + " Высота: " + item.Height;
-							Logger.WriteLine(msg);
-							LogTxtBx.AppendText(Logger.Messages.Last().Message);
+                            LogMsg(item, result);
 						}
 					}
 					_videoRecognitionResults.LastFrame = result.IndexFrame;
@@ -158,6 +153,19 @@ namespace CouplingAlturos
 				_videoRecognitionResults.Items.RemoveAt(0);
 			}
 		}
+        
+        private void LogMsg(YoloItem item, VideoRecognitionResult result)
+        {
+            var msg = new StringBuilder();
+            msg.AppendLine("Номер кадра: " + result.IndexFrame.ToString());
+            msg.AppendLine("Координата центра X: " + item.X);
+            msg.AppendLine("Координата центра Y: " + item.Y);
+            msg.AppendLine("Ширина: " + item.Width);
+            msg.AppendLine("Высота: " + item.Height);
+            Logger.WriteLine(msg.ToString());
+            LogTxtBx.AppendText(Logger.Messages.Last().Message);
+            
+        }
 
 		private void pic_LoadCompleted(object sender, AsyncCompletedEventArgs e)
 		{
