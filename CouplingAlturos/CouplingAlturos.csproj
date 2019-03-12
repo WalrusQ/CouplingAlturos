@@ -56,7 +56,7 @@
     <Compile Include="Core\Models\LogMessage.cs" />
     <Compile Include="Core\Models\RecognitionResults\VideoRecognitionResult.cs" />
     <Compile Include="Core\Models\FramesValidator.cs" />
-    <Compile Include="Core\RecognitionResultXmlSaver.cs" />
+    <Compile Include="Core\RecognitionResultHandler.cs" />
     <Compile Include="Core\VideoReaderThreadManager.cs" />
     <Compile Include="RegistrationService.cs" />
     <Compile Include="Constants.cs" />

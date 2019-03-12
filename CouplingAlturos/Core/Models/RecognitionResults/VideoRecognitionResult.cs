@@ -5,13 +5,8 @@ using Alturos.Yolo.Model;
 
 namespace CouplingAlturos.Core.Models
 {
-	public class VideoRecognitionResult : IRecognitionResult
+	public class VideoRecognitionResult : ImageRecognitionResult
 	{
-		public TimeSpan ElapsedTime { get; set; }
-
-		public IEnumerable<YoloItem> Items { get; set; }
-
-		public byte[] ImageBytes { get; set; }
 
 		public long IndexFrame { get; set; }
 

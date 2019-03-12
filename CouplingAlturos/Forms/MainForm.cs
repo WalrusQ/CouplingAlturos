@@ -80,26 +80,8 @@ namespace CouplingAlturos
 		private void RecognitionOutput(IRecognitionResult result, string imageName)
 		{
 			dataGridViewResult.DataSource = result.Items;
-            picBx.Image = DrawBorder2Image(result);
+            picBx.Image = result.DrawBorder2Image();
 			result.SaveToXml($@"Results/{imageName}.xml", imageName);
-		}
-
-		private Image DrawBorder2Image(IRecognitionResult result)
-		{
-           // А можно это экстеншном сделать для RecognitionResult?
-			var image = result.ImageBytes.ToImage();
-			using (var canvas = Graphics.FromImage(image))
-			{
-				foreach (var item in result.Items)
-				{
-					using (var pen = new Pen(Brushes.GreenYellow, image.Width / 100))
-					{
-						canvas.DrawRectangle(pen, item.X, item.Y, item.Width, item.Height);
-						canvas.Flush();
-					}
-				}
-			}
-			return image;
 		}
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -139,7 +121,7 @@ namespace CouplingAlturos
 				var validator = new FramesValidator(_videoRecognitionResults.Items);
 				if (validator.IsValid)
 				{
-					pic.Image = DrawBorder2Image(result);
+                    pic.Image = result.DrawBorder2Image();
 					if (result.IndexFrame - _videoRecognitionResults.LastFrame > 13)
 					{
 						_videoRecognitionResults.Counter++;
@@ -152,7 +134,6 @@ namespace CouplingAlturos
 					_videoRecognitionResults.LastFrame = result.IndexFrame;
 
 				}
-
 				_videoRecognitionResults.Items.RemoveAt(0);
 			}
 		}
