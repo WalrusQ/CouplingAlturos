@@ -18,6 +18,7 @@ using CouplingAlturos.Core.Converters;
 using CouplingAlturos.Core.Models;
 using CouplingAlturos.Model;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace CouplingAlturos
 {
@@ -62,7 +63,9 @@ namespace CouplingAlturos
             toolStripStatusLabelYoloInfo.Text = $@"Detection system: {ImageDetector.YoloMetaInfo.DetectionSystem}";
         }
 
-        private VideoRecognitionResults _videoRecognitionResults; 
+        private VideoRecognitionResults _videoRecognitionResults;
+
+        private ImageLogger imageLogger;
 
 		private void btnOpen_Click(object sender, EventArgs e)
 		{ 
@@ -81,7 +84,8 @@ namespace CouplingAlturos
 		{
 			dataGridViewResult.DataSource = result.Items;
             picBx.Image = result.DrawBorder2Image();
-			result.SaveToXml($@"Results/{imageName}.xml", imageName);
+            imageLogger = new ImageLogger(result, imageName);
+            imageLogger.Save($@"Results/{imageName}.json");
 		}
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)

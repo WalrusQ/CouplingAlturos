@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,14 +60,31 @@ namespace CouplingAlturos.Core.Models
                 var yc = item.Y;
                 var w = item.Width;
                 var h = item.Height;
+                obj.Region = new Region();
+                obj.Region.Main = new Main();
                 obj.Region.Main.TopLeft = new List<int> { (xc - w / 2), (yc + h / 2) };
                 obj.Region.Main.BotRight = new List<int> { (xc + w / 2), (yc - h / 2) };
+                obj.Region.Alternative = new Alternative();
                 obj.Region.Alternative.Center = new List<int> { xc, yc };
                 obj.Region.Alternative.Width = w;
                 obj.Region.Alternative.Height = h;
-                obj.Region.EachPoint = new List<EachPoint> { new EachPoint("top - left, (x; y)", new List<int> { (xc - w / 2), (yc + h / 2) }), new EachPoint("top-right, (x; y)", new List<int> { (xc - w / 2), (yc + h / 2) }) };
+                obj.Region.EachPoint = new List<EachPoint> {
+                    new EachPoint("top-left, (x; y)", new List<int> { (xc - w / 2), (yc + h / 2) }),
+                    new EachPoint("top-right, (x; y)", new List<int> { (xc + w / 2), (yc + h / 2) }),
+                    new EachPoint("bottom-right, (x; y)", new List<int> { (xc + w / 2), (yc - h / 2) }),
+                    new EachPoint("bottom-left, (x; y)", new List<int> { (xc - w / 2), (yc - h / 2) })
+                };
             }
             
+        }
+        
+        public void Save(string path)
+        {
+            using (StreamWriter file = File.CreateText(path))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(file, obj);
+            }
         }
     }
 }
