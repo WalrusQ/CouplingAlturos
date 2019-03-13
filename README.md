@@ -1,6 +1,6 @@
 # CouplingAlturos
 
-Alturos: [Link](https://github.com/AlturosDestinations/Alturos.Yolo)
+[Alturos](https://github.com/AlturosDestinations/Alturos.Yolo)
 ## GPU requirements
 1) Install the latest Nvidia driver for your graphic device
 2) [Install Nvidia CUDA Toolkit 10.0](https://developer.nvidia.com/cuda-downloads) (must be installed add a hardware driver for cuda support)
